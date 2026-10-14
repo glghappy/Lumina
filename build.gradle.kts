@@ -39,6 +39,7 @@ paperweight {
 }
 
 val paperMavenPublicUrl = "https://repo.papermc.io/repository/maven-public/"
+val leavesMavenReleasesUrl = "https://repo.leavesmc.org/releases/"
 val leavesMavenSnapshotsUrl = "https://repo.leavesmc.org/snapshots/"
 
 subprojects {
@@ -48,6 +49,7 @@ subprojects {
     repositories {
         mavenCentral()
         maven(paperMavenPublicUrl)
+        maven(leavesMavenReleasesUrl)
         maven(leavesMavenSnapshotsUrl)
     }
 
@@ -64,7 +66,7 @@ subprojects {
         options.encoding = Charsets.UTF_8.name()
         options.compilerArgs.add("--enable-preview")
         options.isFork = true
-        options.forkOptions.memoryMaximumSize = "8g"
+        options.forkOptions.memoryMaximumSize = "3g"
     }
 
     tasks.withType<Javadoc> {
