@@ -5,7 +5,7 @@
  dependencies {
      mache("io.papermc:mache:1.21.6+build.1")
 -    paperclip("io.papermc:paperclip:3.0.3")
-+    paperclip("org.leavesmc:leavesclip:3.0.1")
++    paperclip("org.leavesmc:leavesclip:3.0.10")
      testRuntimeOnly("org.junit.platform:junit-platform-launcher")
  }
  
