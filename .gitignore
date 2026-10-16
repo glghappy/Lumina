@@ -61,3 +61,6 @@ folia-server
 
 !gradle/wrapper/gradle-wrapper.jar
 !scripts/*.sh
+
+# paperweight generated embedded repos
+lumina-server/src/minecraft/
