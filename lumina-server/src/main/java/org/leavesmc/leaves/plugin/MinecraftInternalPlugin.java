@@ -1,21 +1,21 @@
 /*
- * This file is part of Lophine.
- * Portions derived from Leaves (https://github.com/LeavesMC/Leaves).
- * This file is free software: you can redistribute it and/or modify
+ * This file is part of Leaves (https://github.com/LeavesMC/Leaves)
+ *
+ * Leaves is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This file is distributed in the hope that it will be useful,
+ * Leaves is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this file. If not, see <https://www.gnu.org/licenses/>.
+ * along with Leaves. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package fun.bm.lophine.carpet;
+package org.leavesmc.leaves.plugin;
 
 import io.papermc.paper.plugin.configuration.PluginMeta;
 import io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager;
@@ -34,20 +34,19 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
-public class CarpetInternalPlugin extends PluginBase {
+public class MinecraftInternalPlugin extends PluginBase {
 
-    public static final CarpetInternalPlugin INSTANCE = new CarpetInternalPlugin();
+    public static final MinecraftInternalPlugin INSTANCE = new MinecraftInternalPlugin();
 
     private boolean enabled = true;
 
     private final PluginDescriptionFile pdf;
-    private final java.util.logging.Logger logger;
+    private final PluginLogger logger;
 
-    public CarpetInternalPlugin() {
-        String pluginName = "LophineCarpet";
+    public MinecraftInternalPlugin() {
+        String pluginName = "Minecraft";
         pdf = new PluginDescriptionFile(pluginName, "1.0", "nms");
-        logger = java.util.logging.Logger.getLogger(pluginName);
-        logger.setParent(getServer().getLogger());
+        logger = new PluginLogger(this);
     }
 
     public void setEnabled(boolean enabled) {
@@ -55,7 +54,6 @@ public class CarpetInternalPlugin extends PluginBase {
     }
 
     @Override
-    @Deprecated // Required by Plugin; internal callers use Paper's getPluginMeta().
     public @NotNull PluginDescriptionFile getDescription() {
         return pdf;
     }
@@ -66,7 +64,7 @@ public class CarpetInternalPlugin extends PluginBase {
     }
 
     @Override
-    public @NotNull java.util.logging.Logger getLogger() {
+    public @NotNull PluginLogger getLogger() {
         return logger;
     }
 
