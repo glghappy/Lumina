@@ -1,0 +1,64 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Helvetica Volubi <suisuroru@blue-millennium.fun>
+Date: Mon, 17 Nov 2025 18:41:08 +0800
+Subject: [PATCH] Instant Block Updater
+
+
+diff --git a/io/papermc/paper/threadedregions/RegionizedWorldData.java b/io/papermc/paper/threadedregions/RegionizedWorldData.java
+index 7808af7ab885ca37f9e4e7dd3cc2167661021a8c..3a9cb8efc98332d4f1344a4bd5db225ca3a7195a 100644
+--- a/io/papermc/paper/threadedregions/RegionizedWorldData.java
++++ b/io/papermc/paper/threadedregions/RegionizedWorldData.java
+@@ -504,7 +504,7 @@ public final class RegionizedWorldData {
+     public long lastMidTickExecuteFailure;
+     // From Level
+     public boolean populating;
+-    public final CollectingNeighborUpdater neighborUpdater;
++    public final net.minecraft.world.level.redstone.NeighborUpdater neighborUpdater; // Lophine - Instant Block Updater
+     public boolean captureBlockStates = false;
+     public boolean captureTreeGeneration = false;
+     public final Map<BlockPos, CraftBlockState> capturedBlockStates = new java.util.LinkedHashMap<>(); // Paper
+@@ -564,7 +564,11 @@ public final class RegionizedWorldData {
+         this.world = world;
+         this.blockLevelTicks = new LevelTicks<>(world::isPositionTickingWithEntitiesLoaded, world, true);
+         this.fluidLevelTicks = new LevelTicks<>(world::isPositionTickingWithEntitiesLoaded, world, false);
+-        this.neighborUpdater = new CollectingNeighborUpdater(world, world.neighbourUpdateMax);
++        // Lophine start - Instant Block Updater
++        this.neighborUpdater = fun.bm.lophine.carpet.config.modules.GeneralCompatConfig.instantBlockUpdaterReintroduced
++            ? new net.minecraft.world.level.redstone.InstantNeighborUpdater(world)
++            : new CollectingNeighborUpdater(world, world.neighbourUpdateMax);
++        // Lophine end - Instant Block Updater
+         this.nearbyPlayers = new NearbyPlayers(world);
+         this.wireHandler = new alternate.current.wire.WireHandler(world);
+         this.turbo = new io.papermc.paper.redstone.RedstoneWireTurbo((RedstoneWireBlock)Blocks.REDSTONE_WIRE);
+@@ -903,4 +907,4 @@ public final class RegionizedWorldData {
+     public int getChunkCount() {
+         return this.chunks.size();
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/net/minecraft/server/level/ServerLevel.java b/net/minecraft/server/level/ServerLevel.java
+index 820b997c62cc59cd8f29262eea9ce6b60ff9f545..2d6c7e560e537236066e21de42e2afb9f6caa5c6 100644
+--- a/net/minecraft/server/level/ServerLevel.java
++++ b/net/minecraft/server/level/ServerLevel.java
+@@ -993,11 +993,15 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+         // Paper - rewrite chunk system
+         profiler.pop();
+         profiler.push("debugSynchronizers");
+-        if (this.debugSynchronizers.hasAnySubscriberFor(DebugSubscriptions.NEIGHBOR_UPDATES)) {
+-            regionizedWorldData.neighborUpdater // Folia - region threading
+-                .setDebugListener(blockPos -> this.debugSynchronizers.broadcastEventToTracking(blockPos, DebugSubscriptions.NEIGHBOR_UPDATES, blockPos));
+-        } else {
+-            regionizedWorldData.neighborUpdater.setDebugListener(null); // Folia - region threading
++        // Lophine start - Instant Block Updater
++        if (regionizedWorldData.neighborUpdater instanceof net.minecraft.world.level.redstone.CollectingNeighborUpdater neighborUpdater) {
++            if (this.debugSynchronizers.hasAnySubscriberFor(DebugSubscriptions.NEIGHBOR_UPDATES)) {
++                neighborUpdater // Folia - region threading
++                    .setDebugListener(blockPos -> this.debugSynchronizers.broadcastEventToTracking(blockPos, DebugSubscriptions.NEIGHBOR_UPDATES, blockPos));
++            } else {
++                neighborUpdater.setDebugListener(null); // Folia - region threading
++            }
++        // Lophine end - Instant Block Updater
+         }
+ 
+         this.debugSynchronizers.tick(this.server.debugSubscribers());
