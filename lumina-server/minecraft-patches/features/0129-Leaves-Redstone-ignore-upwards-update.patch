@@ -1,0 +1,72 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bacteriawa <A3167717663@hotmail.com>
+Date: Wed, 14 Jun 2023 12:07:07 +0800
+Subject: [PATCH] Leaves: Redstone ignore upwards update
+
+(Carpet: dustTrapdoorReintroduced)
+
+Co-authored by: violetc <58360096+s-yh-china@users.noreply.github.com>
+As a part of : Leaves (https://github.com/LeavesMC/Leaves)
+Licensed under: GPL-3.0 (https://www.gnu.org/licenses/gpl-3.0.html)
+
+diff --git a/net/minecraft/world/level/block/ComparatorBlock.java b/net/minecraft/world/level/block/ComparatorBlock.java
+index b867f52d98f127269864775dbeb2481cbbd07a26..15aaa50c1e270e4ca4d80df56104b5cceb6f211b 100644
+--- a/net/minecraft/world/level/block/ComparatorBlock.java
++++ b/net/minecraft/world/level/block/ComparatorBlock.java
+@@ -52,6 +52,11 @@ public class ComparatorBlock extends DiodeBlock implements EntityBlock {
+         final BlockState neighbourState,
+         final RandomSource random
+     ) {
++        // Lophine start - redstone ignore upwards update
++        if (fun.bm.lophine.carpet.config.modules.GeneralCompatConfig.dustTrapdoorReintroduced && directionToNeighbour == Direction.DOWN) {
++            return state;
++        }
++        // Lophine end - redstone ignore upwards update
+         return directionToNeighbour == Direction.DOWN && !this.canSurviveOn(level, neighbourPos, neighbourState)
+             ? Blocks.AIR.defaultBlockState()
+             : super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
+diff --git a/net/minecraft/world/level/block/RedstoneWireBlock.java b/net/minecraft/world/level/block/RedstoneWireBlock.java
+index 92a174eb11521a68a1d2d65f6786ea4eea7438e5..c3f0ac5ceb37d6b4cf58c00150b4efc5a493bbf9 100644
+--- a/net/minecraft/world/level/block/RedstoneWireBlock.java
++++ b/net/minecraft/world/level/block/RedstoneWireBlock.java
+@@ -172,7 +172,11 @@ public class RedstoneWireBlock extends Block {
+         final RandomSource random
+     ) {
+         if (directionToNeighbour == Direction.DOWN) {
+-            return !this.canSurviveOn(level, neighbourPos, neighbourState) ? Blocks.AIR.defaultBlockState() : state;
++            // Lophine start - redstone ignore upwards update
++            return fun.bm.lophine.carpet.config.modules.GeneralCompatConfig.dustTrapdoorReintroduced
++                ? state
++                : !this.canSurviveOn(level, neighbourPos, neighbourState) ? Blocks.AIR.defaultBlockState() : state;
++            // Lophine end - redstone ignore upwards update
+         }
+ 
+         if (directionToNeighbour == Direction.UP) {
+@@ -236,7 +240,10 @@ public class RedstoneWireBlock extends Block {
+         BlockPos relativePos = pos.relative(direction);
+         BlockState relativeState = level.getBlockState(relativePos);
+         if (canConnectUp) {
+-            boolean isPlaceableAbove = relativeState.getBlock() instanceof TrapDoorBlock || this.canSurviveOn(level, relativePos, relativeState);
++            // Lophine start - redstone ignore upwards update
++            boolean isPlaceableAbove = (!fun.bm.lophine.carpet.config.modules.GeneralCompatConfig.dustTrapdoorReintroduced && relativeState.getBlock() instanceof TrapDoorBlock)
++                || this.canSurviveOn(level, relativePos, relativeState);
++            // Lophine end - redstone ignore upwards update
+             if (isPlaceableAbove && shouldConnectTo(level, relativePos.above())) {
+                 if (relativeState.isFaceSturdy(level, relativePos, direction.getOpposite())) {
+                     return RedstoneSide.UP;
+diff --git a/net/minecraft/world/level/block/RepeaterBlock.java b/net/minecraft/world/level/block/RepeaterBlock.java
+index 0705bba5bcb79fd5ead5838e94640bbf56371163..67a2d3aa418104abd533162b556bef6dd6df0812 100644
+--- a/net/minecraft/world/level/block/RepeaterBlock.java
++++ b/net/minecraft/world/level/block/RepeaterBlock.java
+@@ -65,6 +65,11 @@ public class RepeaterBlock extends DiodeBlock {
+         final BlockState neighbourState,
+         final RandomSource random
+     ) {
++        // Lophine start - redstone ignore upwards update
++        if (fun.bm.lophine.carpet.config.modules.GeneralCompatConfig.dustTrapdoorReintroduced && directionToNeighbour == Direction.DOWN) {
++            return state;
++        }
++        // Lophine end - redstone ignore upwards update
+         if (directionToNeighbour == Direction.DOWN && !this.canSurviveOn(level, neighbourPos, neighbourState)) {
+             return Blocks.AIR.defaultBlockState();
+         } else {
