@@ -142,7 +142,7 @@ index d9642c53577932eb06639509251c35aaac86c4ec..c8eef129acb5251cff89d2cffac0cdd2
              }
              // Folia end - region threading
 diff --git a/net/minecraft/world/entity/Entity.java b/net/minecraft/world/entity/Entity.java
-index 0eb830d9983ebba5a4f7ef44786dcbb4cc0c3a7e..c2de7a68b8c5b014d6d160176704b21a00abfe02 100644
+index 2dbed9a479582e3a105ceea351d7b1c5e41ea487..995f9b30c7abc9d42ef85f4d658431c21eee94d9 100644
 --- a/net/minecraft/world/entity/Entity.java
 +++ b/net/minecraft/world/entity/Entity.java
 @@ -5075,6 +5075,31 @@ public abstract class Entity

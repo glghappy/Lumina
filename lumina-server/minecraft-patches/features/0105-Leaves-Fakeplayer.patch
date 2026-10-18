@@ -583,7 +583,7 @@ index ff8938fc79be73849e3713c3298eeb45986360bb..22d38d5f78fb8c279b5e7894bbc61dba
  
      public @Nullable ServerPlayer getPlayer(final String playerName) {
 diff --git a/net/minecraft/world/entity/Entity.java b/net/minecraft/world/entity/Entity.java
-index fe3b6113c09fe2553ab02ae12851afcb21cec9fc..3385ead4c29bb1c950bcaac7f5b71cd1080501a1 100644
+index 220821c6b5c9ee4094bb520ddf1e76558ee3c3f9..0e54079235b1c4209b45cc8b99b7c38d20b8ba87 100644
 --- a/net/minecraft/world/entity/Entity.java
 +++ b/net/minecraft/world/entity/Entity.java
 @@ -1294,7 +1294,7 @@ public abstract class Entity

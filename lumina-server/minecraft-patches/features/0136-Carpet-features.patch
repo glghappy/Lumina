@@ -7297,7 +7297,7 @@ index 6541fe108f60d2c55a47f0bb5ba3b17f270cd5fa..df6c5b7cefa43c23e8cb0ede133b5c2d
          this.age = newAge;
          if (oldAge < 0 && newAge >= 0 || oldAge >= 0 && newAge < 0) {
 diff --git a/net/minecraft/world/entity/Entity.java b/net/minecraft/world/entity/Entity.java
-index f7bceacef1f16a1067e32910c7e81befca7a97ef..a1db9985f889e5f3a2ad18f28822d14035cfe81e 100644
+index 285c4c313c2948a904402d065f113516ad438562..d890efc66d8755cc836d5b51a9867443bdcb861e 100644
 --- a/net/minecraft/world/entity/Entity.java
 +++ b/net/minecraft/world/entity/Entity.java
 @@ -267,6 +267,8 @@ public abstract class Entity

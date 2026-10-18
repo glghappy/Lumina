@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: LeavesMC CI <ci@leavesmc.org>
+Date: Sun, 18 Oct 2026 13:04:45 +0800
+Subject: [PATCH] fix: set this.server before CraftServer constructor to
+ prevent NPE during getPlayers() call
+
+
+diff --git a/net/minecraft/server/players/PlayerList.java b/net/minecraft/server/players/PlayerList.java
+index 15c4dca63179ff104ac4a0d32fb91a173ebf17af..06350aa5e6ee4a87b3f11830fe5e11565e0fa1ed 100644
+--- a/net/minecraft/server/players/PlayerList.java
++++ b/net/minecraft/server/players/PlayerList.java
+@@ -227,10 +227,10 @@ public abstract class PlayerList {
+         final PlayerDataStorage playerIo,
+         final NotificationService notificationService
+     ) {
++        this.server = server; // MUST be set BEFORE CraftServer constructor calls getPlayers()!
+         this.cserver = server.server = new org.bukkit.craftbukkit.CraftServer((net.minecraft.server.dedicated.DedicatedServer) server, this);
+         server.console = new com.destroystokyo.paper.console.TerminalConsoleCommandSender(); // Paper
+         // CraftBukkit end
+-        this.server = server;
+         this.registries = registries;
+         this.playerIo = playerIo;
+         this.whitelist = new UserWhiteList(WHITELIST_FILE, notificationService);
