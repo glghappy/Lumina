@@ -19,7 +19,7 @@ index 2f7d926353b57421a40bbd641369cee1cc48fd34..2500a3cf1cdd99b6941378b9a4b004fe
              );
          });
 diff --git a/net/minecraft/world/entity/Entity.java b/net/minecraft/world/entity/Entity.java
-index fac1078db6b8e643df89e9fd73fff8eebb63fb6d..0eb830d9983ebba5a4f7ef44786dcbb4cc0c3a7e 100644
+index fac1078db6b8e643df89e9fd73fff8eebb63fb6d..2dbed9a479582e3a105ceea351d7b1c5e41ea487 100644
 --- a/net/minecraft/world/entity/Entity.java
 +++ b/net/minecraft/world/entity/Entity.java
 @@ -4668,6 +4668,31 @@ public abstract class Entity
@@ -125,7 +125,7 @@ index fac1078db6b8e643df89e9fd73fff8eebb63fb6d..0eb830d9983ebba5a4f7ef44786dcbb4
          // Kaiiju start - sync end platform spawning & entity teleportation
          final java.util.function.Consumer<Entity> tpComplete = type == PortalType.END && destination.getTypeKey() == net.minecraft.world.level.dimension.LevelStem.END ?
 diff --git a/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java b/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
-index 53b47d04f3643775ee6b12f40a1c48eeb5f2e794..ff716d0463476c354c0586c35fa4742fa4f6a064 100644
+index 53b47d04f3643775ee6b12f40a1c48eeb5f2e794..a83de06393628fe7fe56b4a403cf91502dc0d6c5 100644
 --- a/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
 +++ b/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
 @@ -191,6 +191,18 @@ public class TheEndGatewayBlockEntity extends TheEndPortalBlockEntity {
