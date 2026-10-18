@@ -770,7 +770,7 @@ public class GeneralCompatConfig {
     public static volatile int setAnvilExperienceConsumptionLimit = -1;
 
     @ConfigInfo(name = "language")
-    public static volatile String language = "en_us";
+    public static volatile String language = "zh_cn";
 
     @ConfigInfo(name = "amsUpdateSuppressionCrashFix", section = "ams")
     public static volatile String amsUpdateSuppressionCrashFix = "false";
