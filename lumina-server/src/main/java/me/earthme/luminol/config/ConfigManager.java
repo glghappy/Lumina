@@ -20,16 +20,15 @@ public class ConfigManager {
 
     public static void initConfigs() {
         registerConfig(builder.of("luminol", "me.earthme.luminol.config.modules"));
-        registerConfig(builder.of("lophine", "fun.bm.lophine.config.modules")); // add lophine global config
-        // Lophine start - add carpet config
+        registerConfig(builder.of("lumina", "fun.bm.lophine.config.modules")); // add lophine global config
+        // Lumina - add carpet config
         registerConfig(builder.of(
-                new java.io.File("lophine_config"),
-                "lophine_carpet",
-                "lophine_carpet_config.toml",
-                "lophinecarpetconfig",
+                new java.io.File("lumina_config"),
+                "lumina_carpet",
+                "lumina_carpet_config.toml",
+                "luminacarpetconfig",
                 "fun.bm.lophine.carpet.config.modules"
         ));
-        // Lophine end - add carpet config
         preLoad();
     }
 

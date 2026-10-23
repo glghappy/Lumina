@@ -73,7 +73,7 @@ public final class CarpetRuleRegistry {
     }
 
     public static ConfigsInstance config() {
-        ConfigsInstance config = ConfigManager.getConfigs("lophine_carpet");
+        ConfigsInstance config = ConfigManager.getConfigs("lumina_carpet");
         if (config == null) throw new IllegalStateException("Carpet configuration is not initialized.");
         return config;
     }
