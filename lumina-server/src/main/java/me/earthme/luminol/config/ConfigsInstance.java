@@ -96,7 +96,7 @@ public class ConfigsInstance implements LuminolConfigsInstance {
         if (needGlobal) {
             RegionizedServer.ensureGlobalTickThread("Reload " + baseConfigFile.getName() + " off global region thread!");
         }
-        Map<String, Object> previousCarpet = this.name.equals("lophine_carpet")
+        Map<String, Object> previousCarpet = this.name.equals("lumina_carpet")
                 ? fun.bm.lophine.carpet.CarpetConfigLifecycle.snapshot() : null;
         runUnloadTasks();
         dropAllInstanced();
@@ -236,14 +236,14 @@ public class ConfigsInstance implements LuminolConfigsInstance {
         }
 
         // Carpet setDefault completes only after the real write or its exception.
-        configFileInstance = this.name.equals("lophine_carpet")
+        configFileInstance = this.name.equals("lumina_carpet")
                 ? CommentedFileConfig.builder(baseConfigFile).sync().build() : CommentedFileConfig.of(baseConfigFile);
         configFileInstance.load();
 
         try {
             instanceAllModule();
             migrateConfigSections();
-            if (this.name.equals("lophine_carpet")) {
+            if (this.name.equals("lumina_carpet")) {
                 try (var view = fun.bm.lophine.carpet.CarpetRuleRegistry.configurationView(this::peekCarpetConfigValue)) {
                     loadAllModules(keepComments);
                 }
@@ -293,7 +293,7 @@ public class ConfigsInstance implements LuminolConfigsInstance {
      * Load all configuration modules
      */
     private void loadAllModules(boolean keepComments) {
-        if (alreadyInit && this.name.equals("lophine_carpet")) restoreCarpetDefaults();
+        if (alreadyInit && this.name.equals("lumina_carpet")) restoreCarpetDefaults();
         Map<Object, Set<Exception>> stagedMap = new HashMap<>();
         for (Object instanced : allInstanced.keySet()) {
             Set<Exception> exceptions = loadForSingle(instanced, keepComments);
@@ -303,7 +303,7 @@ public class ConfigsInstance implements LuminolConfigsInstance {
         }
 
         allInstanced.putAll(stagedMap);
-        if (this.name.equals("lophine_carpet")) {
+        if (this.name.equals("lumina_carpet")) {
             for (Object module : allInstanced.keySet()) {
                 Runnable before = () -> invokeNeedRunMethods(module, EnumRunnableType.BEFORE_FINAL_LOAD, null);
                 if (alreadyInit) before.run();
@@ -440,7 +440,7 @@ public class ConfigsInstance implements LuminolConfigsInstance {
         }
 
         // handle tasks need processed before config finalized
-        if (!alreadyInit && !this.name.equals("lophine_carpet")) {
+        if (!alreadyInit && !this.name.equals("lumina_carpet")) {
             for (Method method : singleConfigModule.getClass().getDeclaredMethods()) {
                 NeedRun needRun = method.getAnnotation(NeedRun.class);
                 if (needRun != null && needRun.when() == EnumRunnableType.BEFORE_FINAL_LOAD) {
@@ -474,7 +474,7 @@ public class ConfigsInstance implements LuminolConfigsInstance {
 
         // Validate default value
         Object currentValue = field.get(null);
-        if (alreadyInit && this.name.equals("lophine_carpet") && defaultvalueMap.containsKey(fullConfigKeyName)) {
+        if (alreadyInit && this.name.equals("lumina_carpet") && defaultvalueMap.containsKey(fullConfigKeyName)) {
             currentValue = tryTransform(field, defaultvalueMap.get(fullConfigKeyName));
             if (!doNotReload) field.set(null, currentValue);
         }
