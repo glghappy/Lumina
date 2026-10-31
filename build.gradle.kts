@@ -78,3 +78,27 @@ subprojects {
         }
     }
 }
+
+// Lumina version stage override: Implementation-Version in jar manifest
+// Applied AFTER each subproject configures its jar task, so it takes precedence.
+// Format: {mcVersion}-{stage}.{buildNum}-{gitHash}  (stage omitted for release)
+// e.g. 26.3-beta.1-abc1234  |  26.3-rc.3-abc1234  |  26.3-abc1234
+gradle.afterProject {
+    if (name != rootProject.name) {
+        tasks.withType<Jar>().configureEach {
+            manifest {
+                val luminaStage = rootProject.providers.gradleProperty("luminaStage").getOrElse("beta")
+                val luminaBuildNum = rootProject.providers.gradleProperty("luminaBuildNum").getOrElse("1")
+                val stagePart = if (luminaStage == "release") "" else "-${luminaStage}.${luminaBuildNum}"
+                val mcVersion = rootProject.providers.gradleProperty("mcVersion").get()
+                val gitHash = providers.exec {
+                    commandLine("git", "rev-parse", "--short=7", "HEAD")
+                }.standardOutput.asText.get().trim()
+
+                attributes(
+                    "Implementation-Version" to "$mcVersion$stagePart-$gitHash"
+                )
+            }
+        }
+    }
+}
