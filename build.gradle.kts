@@ -23,6 +23,12 @@ paperweight {
             patchFile = file("lumina-api/build.gradle.kts.patch")
         }
 
+        patchRepo("paperApi") {
+            upstreamPath = "paper-api"
+            patchesDir = file("lumina-api/paper-patches")
+            outputDir = file("paper-api")
+        }
+
         patchDir("foliaApi") {
             upstreamPath = "folia-api"
             excludes = listOf("build.gradle.kts", "build.gradle.kts.patch", "paper-patches")

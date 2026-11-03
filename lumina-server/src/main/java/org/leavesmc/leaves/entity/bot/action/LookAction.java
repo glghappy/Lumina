@@ -18,6 +18,7 @@
 package org.leavesmc.leaves.entity.bot.action;
 
 import org.bukkit.Bukkit;
+import org.leavesmc.leaves.entity.bot.BotManager;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -66,6 +67,6 @@ public interface LookAction extends BotAction<LookAction> {
     Player getTarget();
 
     static LookAction create() {
-        return Bukkit.getBotManager().newAction(LookAction.class);
+        return BotManager.getInstance().newAction(LookAction.class);
     }
 }

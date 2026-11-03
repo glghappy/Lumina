@@ -18,6 +18,7 @@
 package org.leavesmc.leaves.entity.bot.action;
 
 import org.bukkit.Bukkit;
+import org.leavesmc.leaves.entity.bot.BotManager;
 
 /**
  * Represents an action where a bot only uses the item in its offhand, without using it on blocks or entities.
@@ -41,6 +42,6 @@ public interface UseItemOffhandAction extends TimerBotAction<UseItemOffhandActio
     UseItemOffhandAction setUseTickTimeout(int timeout);
 
     static UseItemOffhandAction create() {
-        return Bukkit.getBotManager().newAction(UseItemOffhandAction.class);
+        return BotManager.getInstance().newAction(UseItemOffhandAction.class);
     }
 }

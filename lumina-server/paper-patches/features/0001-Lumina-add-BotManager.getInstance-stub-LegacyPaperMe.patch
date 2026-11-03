@@ -1,0 +1,73 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: glghappy <glg_happy@qq.com>
+Date: Mon, 2 Nov 2026 20:58:22 +0800
+Subject: [PATCH] Lumina: add BotManager.getInstance() stub, LegacyPaperMeta
+ overload, asAuthlibCopyCustomValidation
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java b/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java
+index 310c0917fbae3f632cce9b391cbb02f584c06b70..14f45517a3bd6c19ca4fa10c65062896b8b58a79 100644
+--- a/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java
++++ b/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java
+@@ -357,6 +357,12 @@ public class CraftPlayerProfile implements PlayerProfile, SharedPlayerProfile {
+         return craft.getGameProfile();
+     }
+ 
++    // Lumina start - configurable vanilla username check
++    public static GameProfile asAuthlibCopyCustomValidation(PlayerProfile profile) {
++        return asAuthlibCopy(profile);
++    }
++    // Lumina end
++
+     public static ResolvableProfile asResolvableProfileCopy(PlayerProfile profile) {
+         return ((SharedPlayerProfile) profile).buildResolvableProfile();
+     }
+diff --git a/src/main/java/io/papermc/paper/plugin/provider/configuration/LegacyPaperMeta.java b/src/main/java/io/papermc/paper/plugin/provider/configuration/LegacyPaperMeta.java
+index 8cd649c977172f6b757d68565fcbb9eb8ae100a3..da5ba9a686f3939b141770fc3709660a4b791a12 100644
+--- a/src/main/java/io/papermc/paper/plugin/provider/configuration/LegacyPaperMeta.java
++++ b/src/main/java/io/papermc/paper/plugin/provider/configuration/LegacyPaperMeta.java
+@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
+ import io.papermc.paper.plugin.provider.configuration.type.DependencyConfiguration;
+ import io.papermc.paper.plugin.provider.configuration.type.PluginDependencyLifeCycle;
+ import org.spongepowered.configurate.CommentedConfigurationNode;
++import org.spongepowered.configurate.ConfigurationNode;
+ import org.spongepowered.configurate.ConfigurateException;
+ import org.spongepowered.configurate.NodePath;
+ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+@@ -18,12 +19,22 @@ import java.util.List;
+ import java.util.Map;
+ import java.util.Set;
+ 
+-class LegacyPaperMeta {
++public class LegacyPaperMeta {
+ 
+ 
+     private static final TypeToken<Map<PluginDependencyLifeCycle, Map<String, DependencyConfiguration>>> TYPE_TOKEN = new TypeToken<>() {
+     };
+ 
++    // Lumina start - also accept ConfigurationNode (not just CommentedConfigurationNode)
++    public static void migrate(ConfigurationNode node) throws ConfigurateException {
++        if (node instanceof CommentedConfigurationNode commented) {
++            migrate(commented);
++        } else {
++            ConfigurationTransformation.chain(notVersioned()).apply(node);
++        }
++    }
++    // Lumina end
++
+     public static void migrate(CommentedConfigurationNode node) throws ConfigurateException {
+         ConfigurationTransformation.chain(notVersioned()).apply(node);
+     }
+diff --git a/src/main/java/io/papermc/paper/plugin/provider/configuration/PaperPluginMeta.java b/src/main/java/io/papermc/paper/plugin/provider/configuration/PaperPluginMeta.java
+index fb7c6621e2805f4339c255f6c2e02c55ff4c502e..e563612faab9286fedba10dfa7f4e902220e8040 100644
+--- a/src/main/java/io/papermc/paper/plugin/provider/configuration/PaperPluginMeta.java
++++ b/src/main/java/io/papermc/paper/plugin/provider/configuration/PaperPluginMeta.java
+@@ -55,7 +55,7 @@ public class PaperPluginMeta implements PluginMeta {
+     @Required
+     private String version;
+     private String description;
+-    private List<String> authors = List.of();
++    protected List<String> authors = List.of();
+     private List<String> contributors = List.of();
+     private String website;
+     private String prefix;

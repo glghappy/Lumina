@@ -18,12 +18,13 @@
 package org.leavesmc.leaves.entity.bot.action;
 
 import org.bukkit.Bukkit;
+import org.leavesmc.leaves.entity.bot.BotManager;
 
 /**
  * Represents an action for a bot to perform a jump.
  */
 public interface JumpAction extends TimerBotAction<JumpAction> {
     static JumpAction create() {
-        return Bukkit.getBotManager().newAction(JumpAction.class);
+        return BotManager.getInstance().newAction(JumpAction.class);
     }
 }

@@ -29,6 +29,16 @@ import java.util.UUID;
  * Simple fakeplayer manager
  */
 public interface BotManager {
+    static BotManager getInstance() {
+        try {
+            Class<?> clazz = Class.forName("org.leavesmc.leaves.entity.bot.CraftBotManager");
+            java.lang.reflect.Constructor<?> ctor = clazz.getDeclaredConstructor();
+            ctor.setAccessible(true);
+            return (BotManager) ctor.newInstance();
+        } catch (Throwable e) {
+            throw new RuntimeException("Failed to get BotManager", e);
+        }
+    }
 
     /**
      * Gets a fakeplayer object by the given uuid.

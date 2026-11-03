@@ -18,6 +18,7 @@
 package org.leavesmc.leaves.entity.bot.action;
 
 import org.bukkit.Bukkit;
+import org.leavesmc.leaves.entity.bot.BotManager;
 
 /**
  * Represents an action for a bot to move to a specific direction.
@@ -56,6 +57,6 @@ public interface MoveAction extends StateBotAction<MoveAction> {
     }
 
     static MoveAction create() {
-        return Bukkit.getBotManager().newAction(MoveAction.class);
+        return BotManager.getInstance().newAction(MoveAction.class);
     }
 }

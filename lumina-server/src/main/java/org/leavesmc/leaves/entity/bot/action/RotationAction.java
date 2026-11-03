@@ -18,6 +18,7 @@
 package org.leavesmc.leaves.entity.bot.action;
 
 import org.bukkit.Bukkit;
+import org.leavesmc.leaves.entity.bot.BotManager;
 
 /**
  * Represents an action for a bot to rotate to a specific yaw and pitch.
@@ -55,6 +56,6 @@ public interface RotationAction extends BotAction<RotationAction> {
     float getPitch();
 
     static RotationAction create() {
-        return Bukkit.getBotManager().newAction(RotationAction.class);
+        return BotManager.getInstance().newAction(RotationAction.class);
     }
 }

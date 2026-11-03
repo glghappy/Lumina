@@ -18,12 +18,13 @@
 package org.leavesmc.leaves.entity.bot.action;
 
 import org.bukkit.Bukkit;
+import org.leavesmc.leaves.entity.bot.BotManager;
 
 /**
  * Represents an action for a bot to perform auto fishing.
  */
 public interface FishAction extends TimerBotAction<FishAction> {
     static FishAction create() {
-        return Bukkit.getBotManager().newAction(FishAction.class);
+        return BotManager.getInstance().newAction(FishAction.class);
     }
 }

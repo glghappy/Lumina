@@ -18,6 +18,7 @@
 package org.leavesmc.leaves.entity.bot;
 
 import org.bukkit.Bukkit;
+import org.leavesmc.leaves.entity.bot.BotManager;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +29,7 @@ import java.util.function.Consumer;
 public interface BotCreator {
 
     static BotCreator of(String rawName, Location location) {
-        return Bukkit.getBotManager().botCreator(rawName, location);
+        return BotManager.getInstance().botCreator(rawName, location);
     }
 
     BotCreator name(String name);

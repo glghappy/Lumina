@@ -18,6 +18,7 @@
 package org.leavesmc.leaves.entity.bot.action;
 
 import org.bukkit.Bukkit;
+import org.leavesmc.leaves.entity.bot.BotManager;
 
 /**
  * Represents an action where a bot uses an item on a block.
@@ -41,6 +42,6 @@ public interface UseItemOnAction extends TimerBotAction<UseItemOnAction> {
     UseItemOnAction setUseTickTimeout(int timeout);
 
     static UseItemOnAction create() {
-        return Bukkit.getBotManager().newAction(UseItemOnAction.class);
+        return BotManager.getInstance().newAction(UseItemOnAction.class);
     }
 }
