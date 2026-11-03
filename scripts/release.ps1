@@ -132,15 +132,16 @@ Step "生成 changelog"
 
 # 找上一个同 repo 的 tag 来生成 diff
 $prevTag = (& git tag --sort=-creatordate | Where-Object { $_ -ne $Tag } | Select-Object -First 1)
+$nl = [Environment]::NewLine
 if ($prevTag) {
-    $commits = (& git log --format="* [%h](https://github.com/$Repo/commit/%h) %s" --no-merges "$prevTag..HEAD") -join "`n"
+    $commits = (& git log --format="* [%h](https://github.com/$Repo/commit/%h) %s" --no-merges "$prevTag..HEAD") -join $nl
 } else {
-    $commits = (& git log --format="* [%h](https://github.com/$Repo/commit/%h) %s" --no-merges -15) -join "`n"
+    $commits = (& git log --format="* [%h](https://github.com/$Repo/commit/%h) %s" --no-merges -15) -join $nl
 }
 if (-not $commits) { $commits = "* Initial release" }
 
 $Body = @"
-📦Version: ``$MC_VERSION`` | Commit [$ShortHash](https://github.com/$Repo/commit/$ShortHash)
+📦 Version: ``$MC_VERSION`` | Commit [$ShortHash](https://github.com/$Repo/commit/$ShortHash)
 
 SHA256: ``$Sha256``
 
@@ -156,10 +157,14 @@ $commits
 # ========== 创建 Release ==========
 Step "创建 GitHub Release"
 
+# 用 --notes-file 避免 here-string 换行被吞
+$NotesFile = Join-Path $env:TEMP "lumina-release-$Tag.md"
+$Body | Out-File $NotesFile -Encoding utf8
+
 & $GhExe release create $Tag `
     --repo $Repo `
     --title "Lumina $MC_VERSION - $ShortHash" `
-    --notes $Body `
+    --notes-file $NotesFile `
     --target $Branch `
     --latest `
     "$StagedJar#Lumina $MC_VERSION Paperclip"
