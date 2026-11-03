@@ -1,4 +1,4 @@
-﻿From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Lumina Dev <lumina@users.noreply.github.com>
 Date: EEE, 3 11月 2026 20:36:04 +08:00
 Subject: [PATCH] Lumina: fix PaperVersionFetcher for glghappy/Lumina repo
