@@ -161,13 +161,17 @@ Step "创建 GitHub Release"
 $NotesFile = Join-Path $env:TEMP "lumina-release-$Tag.md"
 $Body | Out-File $NotesFile -Encoding utf8
 
-& $GhExe release create $Tag `
-    --repo $Repo `
-    --title "Lumina $MC_VERSION - $ShortHash" `
-    --notes-file $NotesFile `
-    --target $Branch `
-    --latest `
-    "$StagedJar#Lumina $MC_VERSION Paperclip"
+# alpha / beta / rc → prerelease, release → 正式
+$pre = ($STAGE -ne "release")
+$releaseArgs = @("release", "create", $Tag,
+    "--repo", $Repo,
+    "--title", "Lumina $MC_VERSION [$STAGE] - $ShortHash",
+    "--notes-file", $NotesFile,
+    "--target", $Branch)
+if ($pre) { $releaseArgs += "--prerelease" } else { $releaseArgs += "--latest" }
+$releaseArgs += "$StagedJar#Lumina $MC_VERSION Paperclip"
+
+& $GhExe @releaseArgs
 if ($LASTEXITCODE -ne 0) { Die "gh release create 失败" }
 
 Write-Host ""
