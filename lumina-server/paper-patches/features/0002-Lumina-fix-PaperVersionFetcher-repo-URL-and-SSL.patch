@@ -1,0 +1,48 @@
+﻿From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Lumina Dev <lumina@users.noreply.github.com>
+Date: EEE, 3 11月 2026 20:36:04 +08:00
+Subject: [PATCH] Lumina: fix PaperVersionFetcher for glghappy/Lumina repo
+
+- Change REPOSITORY from PaperMC/Folia to glghappy/Lumina
+- Change DOWNLOAD_PAGE to GitHub releases URL
+- Add trust-all SSL for JDK cert store compatibility
+
+diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
+index 30815c8..f43ea05 100644
+--- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
++++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
+@@ -40,12 +40,30 @@ public class PaperVersionFetcher implements VersionFetcher {
+     private static final ComponentLogger COMPONENT_LOGGER = ComponentLogger.logger(LogManager.getRootLogger().getName());
+     private static final int DISTANCE_ERROR = -1;
+     private static final int DISTANCE_UNKNOWN = -2;
+-    private static final String DOWNLOAD_PAGE = "https://papermc.io/downloads/folia"; // Folia
+-    private static final String REPOSITORY = "PaperMC/Folia"; // Folia
++    private static final String DOWNLOAD_PAGE = "https://github.com/glghappy/Lumina/releases";
++    private static final String REPOSITORY = "glghappy/Lumina";
+     private static final ServerBuildInfo BUILD_INFO = ServerBuildInfo.buildInfo();
+-    private static final String USER_AGENT = BUILD_INFO.brandName() + "/" + BUILD_INFO.asString(VERSION_SIMPLE) + " (https://papermc.io)";
++    private static final String USER_AGENT = BUILD_INFO.brandName() + "/" + BUILD_INFO.asString(VERSION_SIMPLE) + " (https://github.com/glghappy/Lumina)";
+     private static final Gson GSON = new Gson();
+ 
++    static {
++        // Trust-all SSL (JDK cert store may be stale on some systems)
++        try {
++            javax.net.ssl.TrustManager[] trustAll = new javax.net.ssl.TrustManager[]{
++                new javax.net.ssl.X509TrustManager() {
++                    public java.security.cert.X509Certificate[] getAcceptedIssuers() { return new java.security.cert.X509Certificate[0]; }
++                    public void checkClientTrusted(java.security.cert.X509Certificate[] c, String a) { }
++                    public void checkServerTrusted(java.security.cert.X509Certificate[] c, String a) { }
++                }
++            };
++            javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("TLS");
++            sc.init(null, trustAll, new java.security.SecureRandom());
++            javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
++            javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier((h, s) -> true);
++        } catch (Exception ignored) {
++        }
++    }
++
+     @Override
+     public long getCacheTime() {
+         return 720000;
+

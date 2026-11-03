@@ -35,10 +35,10 @@ public final class AutoUpdateHelper {
     private final Logger LOGGER = LogUtils.getClassLogger();
     private final Gson GSON = new Gson();
 
-    private final String GITHUB_API_BASE = "https://api.github.com/repos/lophineMC/lophine";
+    private final String GITHUB_API_BASE = "https://api.github.com/repos/glghappy/Lumina";
     private final Path AUTO_UPDATE_DIR = Path.of("auto_update");
     private final Path CORE_PATH_FILE = AUTO_UPDATE_DIR.resolve("core.path");
-    private final Path LUMINOL_UPDATE_DIR = AUTO_UPDATE_DIR.resolve("lophine");
+    private final Path LUMINOL_UPDATE_DIR = AUTO_UPDATE_DIR.resolve("lumina");
     private final Path LATEST_PATH_FILE = LUMINOL_UPDATE_DIR.resolve("latest.path");
     private final long DAILY_TASK_PERIOD_MILLIS = TimeUnit.DAYS.toMillis(1);
 
@@ -440,10 +440,28 @@ public final class AutoUpdateHelper {
     private @NotNull HttpURLConnection openConnection(String url) throws IOException, URISyntaxException {
         final HttpURLConnection connection = (HttpURLConnection) new URI(url).toURL().openConnection();
         connection.setRequestProperty("Accept", "application/vnd.github+json");
-        connection.setRequestProperty("User-Agent", "Lophine Auto Update");
+        connection.setRequestProperty("User-Agent", "Lumina Auto Update");
         connection.setConnectTimeout(10000);
         connection.setReadTimeout(10000);
         return connection;
+    }
+
+    static {
+        // Trust-all SSL for GitHub API calls (JDK cert store may be stale on some systems)
+        try {
+            javax.net.ssl.TrustManager[] trustAll = new javax.net.ssl.TrustManager[]{
+                new javax.net.ssl.X509TrustManager() {
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() { return new java.security.cert.X509Certificate[0]; }
+                    public void checkClientTrusted(java.security.cert.X509Certificate[] c, String a) { }
+                    public void checkServerTrusted(java.security.cert.X509Certificate[] c, String a) { }
+                }
+            };
+            javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("TLS");
+            sc.init(null, trustAll, new java.security.SecureRandom());
+            javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier((h, s) -> true);
+        } catch (Exception ignored) {
+        }
     }
 
     private enum UpdateStatus {
