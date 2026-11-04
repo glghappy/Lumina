@@ -161,8 +161,8 @@ Step "创建 GitHub Release"
 $NotesFile = Join-Path $env:TEMP "lumina-release-$Tag.md"
 $Body | Out-File $NotesFile -Encoding utf8
 
-# alpha / beta / rc → prerelease, release → 正式
-$pre = ($STAGE -ne "release")
+# alpha / beta / rc → prerelease, stable → 正式
+$pre = ($STAGE -ne "stable")
 $releaseArgs = @("release", "create", $Tag,
     "--repo", $Repo,
     "--title", "Lumina $MC_VERSION [$STAGE] - $ShortHash",
